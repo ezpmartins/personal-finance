@@ -1,55 +1,74 @@
-class Despesa: 
-    def __init__(self,descricao,categoria,valor):
+class Despesa:
+    def __init__(self, descricao, categoria, valor):
         self.descricao = descricao
         self.categoria = categoria
-        self.valor = valor
+        try:
+            self.valor = float(valor)
+            if self.valor <= 0:
+                raise ValueError("O valor da despesa deve ser positivo.")
+        except ValueError:
+            raise ValueError("O valor da despesa deve ser um número válido.")
 
 class ControleDespesas:
     def __init__(self):
-        self.despesas = []       
+        self.despesas = []
 
-    def adicionar_despesas(self,despesas):
-        self.despesas.append(despesas)
+    def adicionar_despesas(self, despesa):
+        self.despesas.append(despesa)
 
     def listar_depesas(self):
         if self.despesas:
-            for index, despesa in enumerate(self.despesas,start = 1):
-                print('-'*30)
+            print('-'*30)
+            print('Lista de Despesas:')
+            print('-'*30)
+            for index, despesa in enumerate(self.despesas, start=1):
                 print(f'{index}. Descrição: {despesa.descricao}')
                 print(f'Categoria: {despesa.categoria}')
-                print(f'Valor: R${despesa.valor}')
-                print('-'*30)
+                print(f'Valor: R$ {despesa.valor:.2f}')
+                print('-'*20)
+            print('-'*30)
         else:
-            print('Nehuma despesa foi cadastrada') 
+            print('Nenhuma despesa foi cadastrada.')
 
 if __name__ == '__main__':
     controle = ControleDespesas()
 
     while True:
+        print('\n--- Menu ---')
         print('1 - Adicionar Despesas')
         print('2 - Listar Despesas')
         print('3 - Sair')
-        opcao = input('Escolha uma opção')
+
+        opcao = input('Escolha uma opção: ')
 
         if opcao == '1':
-            descricao = input('Qual a descrição do produto?')
-            categoria = input('Qual a categoria do produto?')
-            valor = input('Qual o valor do produto?')
-            despesa = Despesa (descricao,categoria,valor)
-            controle.adicionar_despesas(despesa)
-            print('-'*30)
-            print('Despesa adicionada com sucesso!')
-            print('-'*30)
-
-            
+            print('\n--- Adicionar Despesa ---')
+            descricao = input('Qual a descrição do produto? ')
+            categoria = input('Qual a categoria do produto? ')
+            while True:
+                valor_str = input('Qual o valor do produto? R$ ')
+                try:
+                    valor = float(valor_str)
+                    if valor <= 0:
+                        print('Erro: O valor da despesa deve ser positivo. Tente novamente.')
+                    else:
+                        despesa = Despesa(descricao, categoria, valor)
+                        controle.adicionar_despesas(despesa)
+                        print('-'*30)
+                        print('Despesa adicionada com sucesso!')
+                        print('-'*30)
+                        break
+                except ValueError:
+                    print('Erro: O valor digitado não é um número válido. Tente novamente.')
+            continue
 
         elif opcao == '2':
-            print('Lista de Produtos: ')
-            controle.listar_depesas() 
+            print('\n--- Listar Despesas ---')
+            controle.listar_depesas()
 
         elif opcao == '3':
             print('Finalizando...')
-            break   
+            break
 
         else:
-            print('Opção inválida! Tente novamente')
+            print('Opção inválida! Tente novamente.')
